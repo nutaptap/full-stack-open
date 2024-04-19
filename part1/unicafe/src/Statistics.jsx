@@ -1,29 +1,21 @@
+import { StatisticLine } from "./StatisticLine";
+
 export function Statistics({ statistics }) {
   const { good, neutral, bad, all, average, positive } = statistics;
   if (good || neutral || bad) {
     return (
       <article>
         <h2>Statistics</h2>
-        <ul>
-          <li>
-            good <span>{good}</span>
-          </li>
-          <li>
-            neutral <span>{neutral}</span>
-          </li>
-          <li>
-            bad <span>{bad}</span>
-          </li>
-          <li>
-            all <span>{all}</span>
-          </li>
-          <li>
-            average <span>{average || 0}</span>
-          </li>
-          <li>
-            positive <span>{positive + "%" || 0}</span>
-          </li>
-        </ul>
+        <table>
+          <tbody>
+            <StatisticLine text={"good"} value={good} />
+            <StatisticLine text={"neutral"} value={neutral} />
+            <StatisticLine text={"bad"} value={bad} />
+            <StatisticLine text={"all"} value={all} />
+            <StatisticLine text={"average"} value={average || 0} />
+            <StatisticLine text={"positive"} value={positive + "%" || 0} />
+          </tbody>
+        </table>
       </article>
     );
   } else {
