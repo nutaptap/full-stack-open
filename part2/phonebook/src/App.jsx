@@ -1,16 +1,33 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "39-44-5323523" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
-  function handleChange(e) {
+  function handleName(e) {
     setNewName(e.target.value);
+  }
+
+  function handleNumber(e) {
+    setNewNumber(e.target.value);
   }
 
   function handleClick(e) {
     e.preventDefault();
-    setPersons([...persons, { name: newName }]);
+    const duplicated = findNameDuplicates();
+    console.log(duplicated);
+    if (!duplicated) {
+      setPersons([...persons, { name: newName, number: newNumber }]);
+    } else {
+      window.alert(`The name ${newName} already exists!`);
+    }
+  }
+
+  function findNameDuplicates() {
+    return persons.some((person) => person.name === newName);
   }
 
   return (
@@ -19,7 +36,8 @@ const App = () => {
       <form>
         <div>
           <label htmlFor="name">name: </label>
-          <input type="text" id="name" onChange={handleChange} />
+          <input type="text" id="name" onChange={handleName} />
+          <input type="text" id="number" onChange={handleNumber} />
         </div>
         <div>
           <button type="submit" onClick={handleClick}>
@@ -30,7 +48,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {persons.map((person, index) => (
-          <li key={index}>{person.name}</li>
+          <li key={index}>{`${person.name} · ${person.number}`}</li>
         ))}
       </ul>
     </div>
