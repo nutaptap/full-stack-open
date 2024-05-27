@@ -11,9 +11,6 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    /*     const newPersons = getAll;
-    setPersons(newPersons);
-    console.log(newPersons); */
     personsService.getAll().then((response) => {
       setPersons(response.data);
     });
@@ -27,12 +24,25 @@ const App = () => {
     setNewNumber(e.target.value);
   }
 
+  function addPerson() {
+    const personObject = {
+      name: newName,
+      number: newNumber,
+    };
+    personsService.create(personObject).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
+    });
+  }
+
   function handleClick(e) {
     e.preventDefault();
     const duplicated = findNameDuplicates();
     console.log(duplicated);
     if (!duplicated) {
-      setPersons([...persons, { name: newName, number: newNumber }]);
+      /* setPersons([...persons, { name: newName, number: newNumber }]); */
+      addPerson();
     } else {
       window.alert(`The name ${newName} already exists!`);
     }
