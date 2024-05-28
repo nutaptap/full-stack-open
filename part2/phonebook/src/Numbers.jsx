@@ -1,14 +1,19 @@
-export default function Numbers({ persons, filter }) {
+export default function Numbers({ persons, filter, handleDelete }) {
   return (
     <section>
       <h2>Numbers</h2>
-      <ul>
+      <div>
         {persons
           .filter((person) => person.name.toLowerCase().includes(filter))
-          .map((person, index) => (
-            <li key={index}>{`${person.name} · ${person.number}`}</li>
+          .map((person) => (
+            <div key={person.id}>
+              <div>{`${person.name} · ${person.number}`} </div>
+              <button data-id={person.id} onClick={handleDelete}>
+                delete
+              </button>
+            </div>
           ))}
-      </ul>
+      </div>
     </section>
   );
 }

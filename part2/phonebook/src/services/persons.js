@@ -9,4 +9,9 @@ const getAll = () => {
 const create = newObject => {
   return axios.post(baseUrl, newObject)
 }
-export default {getAll, create}
+
+const deleteId = id => {
+  console.log(baseUrl + id)
+  return axios.delete(baseUrl + id)
+}
+export default {getAll, create, deleteId}

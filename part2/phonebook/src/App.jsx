@@ -41,7 +41,6 @@ const App = () => {
     const duplicated = findNameDuplicates();
     console.log(duplicated);
     if (!duplicated) {
-      /* setPersons([...persons, { name: newName, number: newNumber }]); */
       addPerson();
     } else {
       window.alert(`The name ${newName} already exists!`);
@@ -56,6 +55,25 @@ const App = () => {
     setFilter(e.target.value.toLowerCase());
   }
 
+  function handleDelete(e) {
+    const id = String(e.target.getAttribute("data-id"));
+    if (window.confirm("Are you sure you want to delete this person?")) {
+      personsService
+        .deleteId(id)
+        .then((response) => {
+          console.log(response);
+          // Fetch the updated list of persons only after the delete request is successful
+          return personsService.getAll();
+        })
+        .then((response) => {
+          setPersons(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error deleting the person:", error);
+        });
+    }
+  }
+
   return (
     <main>
       <h1>Phonebook</h1>
@@ -67,7 +85,11 @@ const App = () => {
             handleNumber={handleNumber}
             handleClick={handleClick}
           />
-          <Numbers persons={persons} filter={filter} />
+          <Numbers
+            persons={persons}
+            filter={filter}
+            handleDelete={handleDelete}
+          />
         </div>
       ) : (
         <div>loading</div>
