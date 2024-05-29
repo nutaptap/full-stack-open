@@ -39,16 +39,42 @@ const App = () => {
   function handleClick(e) {
     e.preventDefault();
     const duplicated = findNameDuplicates();
-    console.log(duplicated);
     if (!duplicated) {
       addPerson();
-    } else {
-      window.alert(`The name ${newName} already exists!`);
+    } else if (
+      window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )
+    ) {
+      console.log("accepted");
+      updatePerson(duplicated.id);
     }
   }
 
   function findNameDuplicates() {
-    return persons.some((person) => person.name === newName);
+    return persons.find(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
+  }
+
+  function updatePerson(id) {
+    const newObject = {
+      name: newName,
+      number: newNumber,
+      id: id,
+    };
+    personsService
+      .put(id, newObject)
+      .then((response) => {
+        console.log(response);
+        return personsService.getAll();
+      })
+      .then((response) => {
+        setPersons(response.data);
+      })
+      .catch((error) => {
+        console.log("There was an error updating the person", error);
+      });
   }
 
   function handleFilter(e) {
@@ -62,7 +88,6 @@ const App = () => {
         .deleteId(id)
         .then((response) => {
           console.log(response);
-          // Fetch the updated list of persons only after the delete request is successful
           return personsService.getAll();
         })
         .then((response) => {

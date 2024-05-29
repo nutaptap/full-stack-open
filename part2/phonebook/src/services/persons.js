@@ -11,7 +11,11 @@ const create = newObject => {
 }
 
 const deleteId = id => {
-  console.log(baseUrl + id)
   return axios.delete(baseUrl + id)
 }
-export default {getAll, create, deleteId}
+
+const put = (id, newObject)=> {
+  return axios.put(baseUrl + id, newObject)
+}
+
+export default {getAll, create, deleteId, put}
