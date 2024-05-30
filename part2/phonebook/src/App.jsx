@@ -3,12 +3,15 @@ import Filter from "./Filter";
 import Form from "./Form";
 import Numbers from "./Numbers";
 import personsService from "./services/persons";
+import Message from "./Message";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(undefined);
+  const [messageType, setMessageType] = useState(undefined);
 
   useEffect(() => {
     personsService.getAll().then((response) => {
@@ -30,10 +33,19 @@ const App = () => {
       number: newNumber,
     };
     personsService.create(personObject).then((response) => {
+      addMessage(`Added ${newName}`, "success");
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
     });
+  }
+
+  function addMessage(message, type) {
+    setMessage(message);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage(undefined);
+    }, 2000);
   }
 
   function handleClick(e) {
@@ -74,6 +86,10 @@ const App = () => {
       })
       .catch((error) => {
         console.log("There was an error updating the person", error);
+        addMessage(
+          `Information of ${newName} has already been removed from the server`,
+          "error"
+        );
       });
   }
 
@@ -102,6 +118,7 @@ const App = () => {
   return (
     <main>
       <h1>Phonebook</h1>
+      <Message message={message} type={messageType} />
       {persons.length > 0 ? (
         <div>
           <Filter handleFilter={handleFilter} />
